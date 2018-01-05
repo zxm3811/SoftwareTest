@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>  
+<project name="Experiment1" default="test" basedir=".">   
+        <!--设置属性-->  
+         <property name="output" value="bin"/>   
+         <property name="src" value="src"/>   
+         <property name="report" value="report" />   
+      
+         <!-- - - - - - - - - - - - - - - - - -   
+          target: test report folder init                        
+         - - - - - - - - - - - - - - - - - -->   
+         <target name="init">   
+             <mkdir dir="${report}"/>   
+         </target>   
+      
+         <!-- - - - - - - - - - - - - - - - - -   
+          target: compile                        
+         - - - - - - - - - - - - - - - - - -->   
+         <target name="compile">   
+             <javac srcdir="${src}" destdir="${output}" includeantruntime="true" />   
+         	 <jar basedir="bin" destfile="ant_project.jar"></jar> 
+             <echo>compilation complete!</echo>   
+         </target>   
+  
+         <target name="allcompile" depends="compile"></target>   
+      
+         <!-- ========================================   
+          target: auto test all test case and output report file                        
+         ===================================== -->   
+         <target name="test" depends="allcompile">   
+             <junit printsummary="on" fork="true" showoutput="true">   
+                 <classpath>   
+                     <fileset dir="lib" includes="**/*.jar"/>   
+                     <pathelement path="${output}"/>   
+                 </classpath>   
+                 <formatter type="xml" />   
+                 <batchtest todir="${report}">   
+                     <fileset dir="${output}">   
+                         <include name="**/*Test.*" />   
+                     </fileset>   
+                 </batchtest>   
+             </junit>   
+             <junitreport todir="${report}">   
+                 <fileset dir="${report}">   
+                     <include name="TEST-*.xml" />   
+                 </fileset>   
+                 <report format="frames" todir="${report}" />   
+             </junitreport>   
+         </target>   
+ </project> 
